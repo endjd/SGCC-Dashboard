@@ -286,7 +286,10 @@ def do_run_inference():
     with st.spinner("Running MLOps pipeline..."):
         try:
             res, feats = pipeline.predict(
-                st.session_state.raw_df, return_features=True)
+                st.session_state.raw_df, 
+                return_features=True, 
+                id_column=st.session_state.cons_col
+            )
             st.session_state.res_df  = res
             st.session_state.feat_df = feats
             # NEW #4 – scan history log
