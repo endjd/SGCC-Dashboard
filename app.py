@@ -197,14 +197,14 @@ with st.sidebar:
     st.markdown("**📂 Data Ingestion**")
     uploaded = st.file_uploader("Upload CSV", type=["csv"], label_visibility="collapsed")
     if uploaded:
-        try:
-            df_tmp = pd.read_csv(uploaded)
-            cc, dc, dv = identify_columns(df_tmp)
-            st.session_state.update(raw_df=df_tmp, cons_col=cc, date_cols=dc,
-                                    dates=dv, res_df=None, feat_df=None)
-            st.success(f"✔ {len(df_tmp):,} rows · {len(dc)} dates")
-        except Exception as e:
-            st.error(f"Error: {e}")
+        if st.session_state.get("last_uploaded_id") != uploaded.file_id:
+            try:
+                df_tmp = pd.read_csv(uploaded)
+                cc, dc, dv = identify_columns(df_tmp)
+                st.session_state.update(raw_df=df_tmp, cons_col=cc, date_cols=dc,
+                                        dates=dv, res_df=None, feat_df=None, last_uploaded_id=uploaded.file_id)
+            except Exception as e:
+                st.error(f"Error: {e}")
 
     sample_path = os.path.join(ROOT, "sample_input.csv")
     if st.button("▶  Load sample_input.csv", use_container_width=True):
